@@ -1,0 +1,2520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeoTrust — Own Your Reputation. Get Paid Instantly.</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #00C2A8;
+  --teal-dim: rgba(0,194,168,0.15);
+  --teal-glow: rgba(0,194,168,0.4);
+  --navy: #0B1628;
+  --navy2: #0f1e36;
+  --navy3: #162338;
+  --white: #FFFFFF;
+  --grey: #8FA3BF;
+  --red: #FF4D6D;
+  --yellow: #FFD166;
+  --purple: #9B72FF;
+  --card: rgba(22,35,56,0.85);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--navy);
+  color: var(--white);
+  font-family: 'Syne', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* CUSTOM CURSOR */
+.cursor {
+  position: fixed;
+  width: 8px; height: 8px;
+  background: var(--teal);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.1s;
+  mix-blend-mode: screen;
+}
+.cursor-ring {
+  position: fixed;
+  width: 32px; height: 32px;
+  border: 1px solid var(--teal-glow);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transition: transform 0.15s, width 0.2s, height 0.2s;
+}
+
+/* GRID OVERLAY */
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,194,168,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,194,168,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* SCANLINE */
+.scanline {
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* NAV DOTS */
+.nav-dots {
+  position: fixed;
+  right: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 100;
+}
+.nav-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(0,194,168,0.3);
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+  outline: none;
+}
+.nav-dot.active {
+  background: var(--teal);
+  box-shadow: 0 0 10px var(--teal-glow);
+  transform: scale(1.5);
+}
+
+/* SLIDE CONTAINER */
+.slide {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 5%;
+  z-index: 2;
+  overflow: hidden;
+  /* prevent horizontal blowout on mobile */
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* SLIDE TRANSITIONS */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-left {
+  opacity: 0; transform: translateX(-50px);
+  transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal-left.visible { opacity: 1; transform: translateX(0); }
+.reveal-right {
+  opacity: 0; transform: translateX(50px);
+  transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-3 { transition-delay: 0.3s; }
+.delay-4 { transition-delay: 0.4s; }
+.delay-5 { transition-delay: 0.5s; }
+.delay-6 { transition-delay: 0.6s; }
+.delay-7 { transition-delay: 0.7s; }
+
+/* ============================
+   SLIDE 1 — COVER
+   ============================ */
+#s1 {
+  min-height: 100vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.s1-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.s1-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: orb-float 8s ease-in-out infinite;
+}
+.s1-orb1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(0,194,168,0.18) 0%, transparent 70%);
+  right: -100px; top: -100px;
+  animation-delay: 0s;
+}
+.s1-orb2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(155,114,255,0.1) 0%, transparent 70%);
+  left: 20%; bottom: -80px;
+  animation-delay: -3s;
+}
+@keyframes orb-float {
+  0%,100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-30px) scale(1.05); }
+}
+
+.s1-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--teal);
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.s1-label::before { content: '// '; opacity: 0.5; }
+
+.s1-title {
+  font-size: clamp(72px, 10vw, 130px);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -3px;
+  margin-bottom: 32px;
+  position: relative;
+}
+.s1-title .geo { color: var(--white); }
+.s1-title .trust {
+  color: var(--teal);
+  position: relative;
+  display: inline-block;
+}
+.s1-title .trust::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0; right: 0;
+  height: 3px;
+  background: var(--teal);
+  box-shadow: 0 0 20px var(--teal-glow);
+  animation: line-pulse 2s ease-in-out infinite;
+}
+@keyframes line-pulse {
+  0%,100% { opacity: 1; box-shadow: 0 0 20px var(--teal-glow); }
+  50% { opacity: 0.6; box-shadow: 0 0 40px var(--teal-glow); }
+}
+
+.s1-tagline {
+  font-size: 20px;
+  color: var(--grey);
+  font-weight: 400;
+  margin-bottom: 48px;
+  max-width: 500px;
+  line-height: 1.6;
+}
+.s1-tagline strong { color: var(--white); }
+
+.s1-pills {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 64px;
+}
+.pill {
+  padding: 7px 16px;
+  border: 1px solid rgba(0,194,168,0.4);
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--teal);
+  background: var(--teal-dim);
+  letter-spacing: 1px;
+}
+
+.s1-stats {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  gap: 2px;
+}
+.stat-box {
+  background: var(--card);
+  border: 1px solid rgba(0,194,168,0.2);
+  padding: 20px 28px;
+  position: relative;
+  overflow: hidden;
+}
+.stat-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--teal);
+  box-shadow: 0 0 10px var(--teal-glow);
+}
+.stat-box:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+.stat-box:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+.stat-val {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--teal);
+  display: block;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--grey);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.s1-criteria {
+  display: flex;
+  gap: 12px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+.crit-pill {
+  padding: 8px 18px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--grey);
+  letter-spacing: 1px;
+}
+.crit-pill span { color: var(--teal); margin-right: 6px; }
+
+.s1-footer {
+  position: absolute;
+  bottom: 28px; left: 5%;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: rgba(143,163,191,0.5);
+  letter-spacing: 2px;
+}
+
+/* Animated bracket corners */
+.corner-tl, .corner-br {
+  position: absolute;
+  width: 40px; height: 40px;
+  border-color: var(--teal);
+  border-style: solid;
+  opacity: 0.5;
+}
+.corner-tl { top: 40px; right: 5%; border-width: 2px 0 0 2px; }
+.corner-br { bottom: 40px; right: 5%; border-width: 0 2px 2px 0; }
+
+/* ============================
+   SLIDE 2 — PROBLEM
+   ============================ */
+#s2 { flex-direction: column; align-items: flex-start; gap: 48px; }
+
+.slide-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--teal);
+  text-transform: uppercase;
+}
+.slide-tag::before { content: '[ '; }
+.slide-tag::after { content: ' ]'; }
+
+.slide-title {
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+.slide-subtitle {
+  font-size: 16px;
+  color: var(--grey);
+  font-weight: 400;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+.problem-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  width: 100%;
+}
+.problem-card {
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.problem-card:hover {
+  border-color: rgba(0,194,168,0.4);
+  transform: translateY(-4px);
+}
+.problem-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.problem-card.red::before { background: var(--red); box-shadow: 0 0 12px rgba(255,77,109,0.5); }
+.problem-card.yellow::before { background: var(--yellow); box-shadow: 0 0 12px rgba(255,209,102,0.5); }
+.problem-card.purple::before { background: var(--purple); box-shadow: 0 0 12px rgba(155,114,255,0.5); }
+
+.problem-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+.badge-red { background: rgba(255,77,109,0.15); color: var(--red); border: 1px solid rgba(255,77,109,0.3); }
+.badge-yellow { background: rgba(255,209,102,0.15); color: var(--yellow); border: 1px solid rgba(255,209,102,0.3); }
+.badge-purple { background: rgba(155,114,255,0.15); color: var(--purple); border: 1px solid rgba(155,114,255,0.3); }
+
+.problem-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; }
+.problem-body { font-size: 14px; color: var(--grey); line-height: 1.7; font-weight: 400; }
+.problem-body strong { color: var(--white); }
+
+.opportunity-bar {
+  width: 100%;
+  background: rgba(0,194,168,0.08);
+  border: 1px solid rgba(0,194,168,0.25);
+  border-radius: 6px;
+  padding: 16px 24px;
+  font-size: 14px;
+  color: var(--grey);
+}
+.opportunity-bar strong { color: var(--teal); }
+
+/* ============================
+   SLIDE 3 — SOLUTION
+   ============================ */
+#s3 { flex-direction: column; align-items: flex-start; gap: 40px; }
+
+.solution-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  width: 100%;
+}
+.solution-left { display: flex; flex-direction: column; gap: 16px; }
+.solution-right { display: flex; flex-direction: column; gap: 16px; }
+
+.solution-card {
+  background: var(--card);
+  border: 1px solid rgba(0,194,168,0.15);
+  border-radius: 8px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.solution-card:hover {
+  border-color: rgba(0,194,168,0.4);
+  box-shadow: 0 0 30px rgba(0,194,168,0.08);
+}
+.solution-card-icon {
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+.solution-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--white);
+}
+.solution-card-body {
+  font-size: 13px;
+  color: var(--grey);
+  line-height: 1.7;
+}
+.solution-card-body strong { color: var(--teal); }
+
+/* Flow diagram */
+.flow-diagram {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  overflow: hidden;
+}
+.flow-step {
+  flex: 1;
+  text-align: center;
+  padding: 16px 8px;
+  background: var(--card);
+  border: 1px solid rgba(0,194,168,0.15);
+  position: relative;
+}
+.flow-step:first-child { border-radius: 8px 0 0 8px; }
+.flow-step:last-child { border-radius: 0 8px 8px 0; }
+.flow-arrow {
+  width: 32px;
+  color: var(--teal);
+  font-size: 20px;
+  text-align: center;
+  flex-shrink: 0;
+  background: var(--card);
+  border-top: 1px solid rgba(0,194,168,0.15);
+  border-bottom: 1px solid rgba(0,194,168,0.15);
+  padding: 16px 0;
+  animation: arrow-pulse 1.5s ease-in-out infinite;
+}
+@keyframes arrow-pulse {
+  0%,100% { color: var(--teal); }
+  50% { color: rgba(0,194,168,0.3); }
+}
+.flow-step-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--teal);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.flow-step-title {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* ============================
+   SLIDE 4 — WHY SOLANA
+   ============================ */
+#s4 { flex-direction: column; align-items: flex-start; gap: 40px; }
+
+.solana-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+.solana-card {
+  background: var(--card);
+  border: 1px solid rgba(0,194,168,0.15);
+  border-radius: 8px;
+  padding: 28px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.solana-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(0,194,168,0.06) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.solana-card:hover::after { opacity: 1; }
+.solana-card:hover { border-color: rgba(0,194,168,0.4); transform: translateY(-3px); }
+
+.solana-metric {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--teal);
+  line-height: 1;
+  font-family: 'Space Mono', monospace;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 110px;
+}
+.solana-card-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.solana-card-body { font-size: 13px; color: var(--grey); line-height: 1.6; }
+
+/* ============================
+   SLIDE 5 — MARKET
+   ============================ */
+#s5 { flex-direction: column; align-items: flex-start; gap: 40px; }
+
+.market-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  width: 100%;
+}
+.market-segments { display: flex; flex-direction: column; gap: 12px; }
+.market-seg {
+  background: var(--card);
+  border-left: 3px solid var(--teal);
+  padding: 16px 20px;
+  border-radius: 0 6px 6px 0;
+  transition: all 0.3s;
+}
+.market-seg:hover { background: rgba(0,194,168,0.08); transform: translateX(4px); }
+.market-seg-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.market-seg-body { font-size: 13px; color: var(--grey); }
+
+.market-stats { display: flex; flex-direction: column; gap: 12px; }
+.mstat {
+  background: var(--card);
+  border: 1px solid rgba(0,194,168,0.2);
+  border-radius: 8px;
+  padding: 20px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.mstat::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px; height: 100%;
+  background: var(--teal);
+  box-shadow: 0 0 12px var(--teal-glow);
+}
+.mstat-val {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--teal);
+  font-family: 'Space Mono', monospace;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.mstat-label { font-size: 12px; color: var(--grey); font-family: 'JetBrains Mono', monospace; }
+.business-model {
+  width: 100%;
+  background: rgba(0,194,168,0.06);
+  border: 1px solid rgba(0,194,168,0.2);
+  border-radius: 6px;
+  padding: 14px 20px;
+  font-size: 13px;
+  color: var(--grey);
+  font-family: 'JetBrains Mono', monospace;
+}
+.business-model strong { color: var(--teal); }
+
+/* ============================
+   SLIDE 6 — FEATURES
+   ============================ */
+#s6 { flex-direction: column; align-items: flex-start; gap: 40px; }
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+.feature-card {
+  background: var(--card);
+  border: 1px solid rgba(0,194,168,0.1);
+  border-radius: 8px;
+  padding: 20px 16px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.feature-card:hover {
+  border-color: var(--teal);
+  box-shadow: 0 0 30px rgba(0,194,168,0.12);
+  transform: translateY(-4px);
+}
+.feature-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--teal);
+  margin-bottom: 14px;
+  opacity: 0.7;
+}
+.feature-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.feature-body {
+  font-size: 12px;
+  color: var(--grey);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+.feature-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--teal);
+  opacity: 0.7;
+  border-top: 1px solid rgba(0,194,168,0.15);
+  padding-top: 10px;
+}
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--teal), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.feature-card:hover::before { opacity: 1; }
+
+/* ============================
+   SLIDE 7 — ORIGINALITY
+   ============================ */
+#s7 { flex-direction: column; align-items: flex-start; gap: 40px; }
+
+.origin-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  width: 100%;
+}
+.origin-card {
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 28px;
+  transition: all 0.3s;
+}
+.origin-card:hover { border-color: rgba(0,194,168,0.3); transform: translateY(-3px); }
+.origin-icon { font-size: 28px; margin-bottom: 14px; }
+.origin-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; color: var(--teal); }
+.origin-body { font-size: 13px; color: var(--grey); line-height: 1.7; }
+
+.differentiator {
+  width: 100%;
+  background: linear-gradient(135deg, rgba(0,194,168,0.08) 0%, rgba(155,114,255,0.05) 100%);
+  border: 1px solid rgba(0,194,168,0.2);
+  border-radius: 8px;
+  padding: 20px 28px;
+}
+.diff-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--teal);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.diff-text {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* ============================
+   SLIDE 8 — BUILD PLAN
+   ============================ */
+#s8 { flex-direction: column; align-items: flex-start; gap: 40px; }
+
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px;
+  width: 100%;
+}
+.timeline-week {
+  background: var(--card);
+  border: 1px solid rgba(0,194,168,0.1);
+  padding: 20px 16px;
+  position: relative;
+  transition: all 0.3s;
+}
+.timeline-week:first-child { border-radius: 8px 0 0 8px; }
+.timeline-week:last-child { border-radius: 0 8px 8px 0; }
+.timeline-week:hover { border-color: rgba(0,194,168,0.4); z-index: 1; }
+.timeline-week::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--teal);
+  box-shadow: 0 0 8px var(--teal-glow);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+.timeline-week:hover::before { transform: scaleX(1); }
+.wk-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--teal);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.wk-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--white);
+}
+.wk-items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.wk-items li {
+  font-size: 11px;
+  color: var(--grey);
+  padding-left: 12px;
+  position: relative;
+  line-height: 1.4;
+}
+.wk-items li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--teal);
+  font-size: 9px;
+  top: 2px;
+}
+
+.risk-bar {
+  width: 100%;
+  background: rgba(255,209,102,0.06);
+  border: 1px solid rgba(255,209,102,0.2);
+  border-radius: 6px;
+  padding: 14px 20px;
+  font-size: 13px;
+  color: var(--grey);
+  font-family: 'JetBrains Mono', monospace;
+}
+.risk-bar strong { color: var(--yellow); }
+
+/* ============================
+   SLIDE 9 — WIREFRAMES
+   ============================ */
+#s9 { flex-direction: column; align-items: flex-start; gap: 40px; }
+
+.wireframes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+.wireframe {
+  background: var(--navy2);
+  border: 1px solid rgba(0,194,168,0.2);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+.wireframe:hover { border-color: var(--teal); transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+.wf-header {
+  background: rgba(0,194,168,0.1);
+  border-bottom: 1px solid rgba(0,194,168,0.2);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.wf-dots { display: flex; gap: 5px; }
+.wf-dot { width: 8px; height: 8px; border-radius: 50%; }
+.wf-dot:nth-child(1) { background: #ff5f57; }
+.wf-dot:nth-child(2) { background: #ffbd2e; }
+.wf-dot:nth-child(3) { background: #28c840; }
+.wf-title { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--grey); margin-left: 8px; }
+.wf-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+.wf-field {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 4px;
+  padding: 10px 12px;
+}
+.wf-field-label { font-size: 9px; color: var(--teal); font-family: 'JetBrains Mono', monospace; margin-bottom: 4px; letter-spacing: 1px; }
+.wf-field-val { font-size: 13px; color: var(--white); }
+.wf-btn {
+  background: var(--teal);
+  color: var(--navy);
+  border-radius: 4px;
+  padding: 10px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 13px;
+  margin-top: 4px;
+}
+.wf-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0,194,168,0.15);
+  border: 1px solid rgba(0,194,168,0.3);
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--teal);
+  font-family: 'JetBrains Mono', monospace;
+}
+.wf-cred {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-left: 3px solid var(--teal);
+  padding: 8px 12px;
+  border-radius: 0 4px 4px 0;
+  font-size: 11px;
+}
+.wf-cred-title { color: var(--white); font-weight: 600; }
+.wf-cred-sub { color: var(--grey); font-size: 10px; margin-top: 2px; }
+.wf-stat-row { display: flex; gap: 8px; }
+.wf-stat { flex: 1; background: rgba(0,194,168,0.08); border-radius: 4px; padding: 8px; text-align: center; }
+.wf-stat-v { font-size: 18px; font-weight: 800; color: var(--teal); }
+.wf-stat-l { font-size: 9px; color: var(--grey); font-family: 'JetBrains Mono', monospace; }
+
+/* ============================
+   SLIDE 10 — TEAM
+   ============================ */
+#s10 { flex-direction: column; align-items: flex-start; gap: 40px; }
+
+.team-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.2fr;
+  gap: 20px;
+  width: 100%;
+}
+.team-card {
+  background: var(--card);
+  border: 1px solid rgba(0,194,168,0.2);
+  border-radius: 12px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  transition: all 0.3s;
+}
+.team-card:hover { border-color: var(--teal); box-shadow: 0 0 40px rgba(0,194,168,0.1); transform: translateY(-4px); }
+.team-avatar {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  border: 2px solid var(--teal);
+  background: rgba(0,194,168,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--teal);
+  box-shadow: 0 0 20px rgba(0,194,168,0.2);
+  position: relative;
+}
+.team-avatar::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,194,168,0.2);
+}
+.team-name { font-size: 20px; font-weight: 800; }
+.team-role { font-size: 12px; color: var(--grey); font-family: 'JetBrains Mono', monospace; }
+.team-skills { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+.team-skill {
+  background: rgba(0,194,168,0.08);
+  border: 1px solid rgba(0,194,168,0.2);
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--teal);
+}
+.proof-panel {
+  background: var(--card);
+  border: 1px solid rgba(0,194,168,0.15);
+  border-radius: 12px;
+  padding: 28px;
+}
+.proof-title { font-size: 16px; font-weight: 700; color: var(--teal); margin-bottom: 16px; }
+.proof-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.proof-item:last-child { border-bottom: none; }
+.proof-check {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: rgba(0,194,168,0.15);
+  border: 1px solid rgba(0,194,168,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--teal);
+  font-size: 10px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.proof-label { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+.proof-body { font-size: 12px; color: var(--grey); line-height: 1.5; }
+
+/* ============================
+   SLIDE 11 — CODE
+   ============================ */
+#s11 { flex-direction: column; align-items: flex-start; gap: 40px; }
+
+.code-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 0.6fr;
+  gap: 20px;
+  width: 100%;
+}
+.code-panel {
+  background: #0d1117;
+  border: 1px solid rgba(0,194,168,0.2);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.code-header {
+  background: rgba(0,194,168,0.06);
+  border-bottom: 1px solid rgba(0,194,168,0.15);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.code-file { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--teal); }
+.code-dots { display: flex; gap: 5px; margin-left: auto; }
+.code-dots span { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.1); }
+pre {
+  padding: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  line-height: 1.8;
+  overflow-x: auto;
+  color: #c9d1d9;
+}
+.kw { color: #ff7b72; }
+.fn { color: #79c0ff; }
+.type { color: #ffa657; }
+.str { color: #a5d6ff; }
+.cm { color: #8b949e; font-style: italic; }
+.teal-c { color: var(--teal); }
+
+.state-machine {
+  background: var(--card);
+  border: 1px solid rgba(0,194,168,0.15);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.sm-title { font-size: 14px; font-weight: 700; color: var(--teal); font-family: 'JetBrains Mono', monospace; }
+.sm-states { display: flex; flex-direction: column; gap: 8px; }
+.sm-state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.sm-state-name {
+  background: rgba(0,194,168,0.1);
+  border: 1px solid rgba(0,194,168,0.3);
+  border-radius: 3px;
+  padding: 3px 8px;
+  color: var(--teal);
+}
+.sm-arrow { color: var(--grey); }
+.instructions { display: flex; flex-direction: column; gap: 6px; }
+.instr {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.instr-name { color: var(--teal); }
+.instr-desc { color: var(--grey); font-size: 10px; }
+
+/* ============================
+   SLIDE 12 — COMPETITORS
+   ============================ */
+#s12 { flex-direction: column; align-items: flex-start; gap: 40px; }
+
+.comp-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.comp-table th {
+  background: rgba(0,194,168,0.08);
+  border-bottom: 2px solid rgba(0,194,168,0.3);
+  padding: 14px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--teal);
+  font-family: 'JetBrains Mono', monospace;
+  text-align: center;
+}
+.comp-table th:first-child { text-align: left; }
+.comp-table td {
+  padding: 14px 16px;
+  font-size: 14px;
+  text-align: center;
+  background: var(--card);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.2s;
+}
+.comp-table tr:hover td { background: rgba(0,194,168,0.04); }
+.comp-table td:first-child { text-align: left; font-weight: 700; font-size: 14px; }
+.comp-table tr:last-child td { background: rgba(0,194,168,0.08); border-bottom: none; }
+.comp-table tr:last-child td:first-child { color: var(--teal); }
+.check-yes { color: var(--teal); font-size: 18px; }
+.check-no { color: var(--red); font-size: 18px; }
+.check-partial { color: var(--yellow); font-size: 18px; }
+
+.comp-legend {
+  display: flex;
+  gap: 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--grey);
+}
+.comp-legend span { margin-right: 4px; }
+
+/* ============================
+   SLIDE 13 — TRACTION
+   ============================ */
+#s13 { flex-direction: column; align-items: flex-start; gap: 40px; }
+
+.traction-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  width: 100%;
+}
+.traction-card {
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  padding: 24px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.traction-card:hover { border-color: rgba(0,194,168,0.3); }
+.traction-badge {
+  position: absolute;
+  top: 16px; right: 16px;
+  background: rgba(0,194,168,0.1);
+  border: 1px solid rgba(0,194,168,0.3);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--teal);
+}
+.traction-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--grey);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.traction-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+.traction-body { font-size: 13px; color: var(--grey); line-height: 1.6; }
+
+/* ============================
+   SLIDE 14 — ROADMAP
+   ============================ */
+#s14 { flex-direction: column; align-items: flex-start; gap: 40px; }
+
+.roadmap-phases {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+.phase-card {
+  background: var(--card);
+  border: 1px solid rgba(0,194,168,0.15);
+  border-radius: 10px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+.phase-card:hover { border-color: rgba(0,194,168,0.4); transform: translateY(-3px); }
+.phase-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--teal);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.phase-period {
+  font-size: 12px;
+  color: var(--grey);
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 16px;
+}
+.phase-title { font-size: 18px; font-weight: 800; margin-bottom: 16px; }
+.phase-items { display: flex; flex-direction: column; gap: 8px; }
+.phase-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--grey);
+}
+.phase-item::before { content: '▸'; color: var(--teal); font-size: 10px; }
+.phase-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--teal), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.phase-card:hover::before { opacity: 1; }
+
+/* ============================
+   SLIDE 15 — CLOSING
+   ============================ */
+#s15 {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 40px;
+  min-height: 100vh;
+}
+.s15-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.s15-orb {
+  position: absolute;
+  width: 800px; height: 800px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,194,168,0.12) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  animation: orb-float 6s ease-in-out infinite;
+}
+.closing-title {
+  font-size: clamp(56px, 8vw, 100px);
+  font-weight: 800;
+  letter-spacing: -2px;
+  line-height: 0.95;
+}
+.closing-title .line2 { color: var(--teal); }
+.closing-tagline {
+  font-size: 18px;
+  color: var(--grey);
+  max-width: 500px;
+  line-height: 1.6;
+}
+.closing-stats {
+  display: flex;
+  gap: 2px;
+}
+.closing-stat {
+  background: var(--card);
+  border: 1px solid rgba(0,194,168,0.2);
+  padding: 16px 28px;
+}
+.closing-stat:first-child { border-radius: 8px 0 0 8px; }
+.closing-stat:last-child { border-radius: 0 8px 8px 0; }
+.cs-val { font-size: 24px; font-weight: 800; color: var(--teal); font-family: 'Space Mono', monospace; }
+.cs-lbl { font-size: 11px; color: var(--grey); font-family: 'JetBrains Mono', monospace; }
+.closing-footer {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: rgba(143,163,191,0.4);
+  letter-spacing: 3px;
+}
+
+/* SCROLL INDICATOR */
+.scroll-hint {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: rgba(143,163,191,0.4);
+  letter-spacing: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  z-index: 100;
+  transition: opacity 0.5s;
+}
+.scroll-arrow {
+  width: 20px; height: 20px;
+  border-right: 1px solid rgba(0,194,168,0.4);
+  border-bottom: 1px solid rgba(0,194,168,0.4);
+  transform: rotate(45deg);
+  animation: scroll-bounce 1.5s ease-in-out infinite;
+}
+@keyframes scroll-bounce {
+  0%,100% { transform: rotate(45deg) translateY(0); opacity: 0.4; }
+  50% { transform: rotate(45deg) translateY(4px); opacity: 1; }
+}
+
+/* ============================
+   MOBILE RESPONSIVE
+   ============================ */
+
+/* ── Tablet (≤900px) ── */
+@media (max-width: 900px) {
+  .solution-layout { grid-template-columns: 1fr; gap: 14px; }
+  .market-layout   { grid-template-columns: 1fr; gap: 16px; }
+  .features-grid   { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .origin-layout   { grid-template-columns: 1fr; gap: 12px; }
+  .timeline        { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .timeline-week   { border-radius: 8px !important; }
+  .wireframes-grid { grid-template-columns: 1fr; gap: 16px; }
+  .team-layout     { grid-template-columns: 1fr 1fr; gap: 14px; }
+  .proof-panel     { grid-column: 1 / -1; }
+  .code-layout     { grid-template-columns: 1fr; gap: 14px; }
+  .traction-grid   { grid-template-columns: 1fr; gap: 12px; }
+  .roadmap-phases  { grid-template-columns: 1fr; gap: 12px; }
+  .solana-grid     { grid-template-columns: 1fr; gap: 12px; }
+}
+
+/* ── Mobile (≤768px) ── */
+@media (max-width: 768px) {
+  /* Kill fancy cursor on touch */
+  body { cursor: auto; }
+  .cursor, .cursor-ring { display: none; }
+
+  /* Nav dots — smaller, right edge */
+  .nav-dots { right: 8px; gap: 8px; }
+  .nav-dot  { width: 5px; height: 5px; }
+
+  /* Slide base — comfortable side padding */
+  .slide { padding: 52px 18px 64px; min-height: auto; }
+
+  /* Typography scale-down */
+  .slide-title    { font-size: clamp(28px, 7.5vw, 44px); letter-spacing: -0.5px; }
+  .slide-subtitle { font-size: 14px; max-width: 100%; }
+  .slide-num      { right: 18px; bottom: 10px; font-size: 10px; }
+  .scroll-hint    { bottom: 12px; }
+
+  /* ── Slide 1 ── */
+  .s1-title   { font-size: clamp(52px, 13vw, 80px); letter-spacing: -2px; }
+  .s1-tagline { font-size: 15px; margin-bottom: 24px; max-width: 100%; }
+  .s1-pills   { gap: 8px; margin-bottom: 24px; }
+  .s1-stats   {
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    gap: 3px;
+  }
+  .stat-box        { padding: 14px 12px; }
+  .stat-val        { font-size: 22px; }
+  .stat-lbl        { font-size: 10px; }
+  .s1-criteria     { gap: 8px; margin-top: 24px; }
+  .crit-pill       { font-size: 10px; padding: 6px 10px; }
+  .s1-footer       { left: 18px; font-size: 9px; }
+  .corner-tl, .corner-br { display: none; }
+
+  /* ── Slide 2 — Problem ── */
+  .problem-grid { grid-template-columns: 1fr; gap: 12px; }
+  .problem-card { padding: 20px 18px; }
+  .problem-title { font-size: 18px; }
+  .problem-body  { font-size: 13px; }
+
+  /* ── Slide 3 — Solution ── */
+  .solution-layout { grid-template-columns: 1fr; gap: 12px; }
+  .flow-diagram    {
+    flex-wrap: wrap;
+    gap: 4px;
+    overflow-x: visible;
+  }
+  .flow-step  { min-width: calc(50% - 4px); flex: 1 1 calc(50% - 4px); }
+  .flow-arrow { display: none; }
+
+  /* ── Slide 4 — Solana ── */
+  .solana-grid   { grid-template-columns: 1fr; gap: 12px; }
+  .solana-card   { flex-direction: row; gap: 16px; padding: 18px; align-items: flex-start; }
+  .solana-metric { font-size: 26px; min-width: 80px; }
+
+  /* ── Slide 5 — Market ── */
+  .market-layout { grid-template-columns: 1fr; gap: 16px; }
+  .mstat-val     { font-size: 30px; }
+
+  /* ── Slide 6 — Features ── */
+  .features-grid { grid-template-columns: 1fr; gap: 10px; }
+  .feature-card  { padding: 18px; }
+
+  /* ── Slide 7 — Originality ── */
+  .origin-layout { grid-template-columns: 1fr; gap: 12px; }
+  .origin-card   { padding: 20px; }
+
+  /* ── Slide 8 — Build Plan ── */
+  .timeline      { grid-template-columns: 1fr; gap: 10px; }
+  .timeline-week { border-radius: 8px !important; padding: 16px 14px; }
+
+  /* ── Slide 9 — Wireframes ── */
+  .wireframes-grid { grid-template-columns: 1fr; gap: 14px; }
+
+  /* ── Slide 10 — Team ── */
+  .team-layout { grid-template-columns: 1fr; gap: 12px; }
+  .proof-panel { grid-column: 1 / -1; }
+  .team-card   { padding: 20px 16px; }
+  .team-avatar { width: 60px; height: 60px; font-size: 18px; }
+  .team-name   { font-size: 18px; }
+
+  /* ── Slide 11 — Code ── */
+  .code-layout { grid-template-columns: 1fr; gap: 14px; }
+  pre {
+    font-size: 10px;
+    padding: 14px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ── Slide 12 — Competitors ── */
+  /* Make table scrollable */
+  .comp-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    border-radius: 12px;
+  }
+  .comp-table         { min-width: 480px; font-size: 12px; }
+  .comp-table th      { padding: 10px 10px; font-size: 10px; }
+  .comp-table td      { padding: 10px 10px; }
+  .comp-legend        { flex-wrap: wrap; gap: 10px; }
+
+  /* ── Slide 13 — Traction ── */
+  .traction-grid { grid-template-columns: 1fr; gap: 12px; }
+  .traction-card { padding: 20px; }
+  .traction-badge { position: static; display: inline-block; margin-bottom: 10px; }
+
+  /* ── Slide 14 — Roadmap ── */
+  .roadmap-phases { grid-template-columns: 1fr; gap: 12px; }
+  .phase-card     { padding: 20px; }
+
+  /* ── Slide 15 — Closing ── */
+  .closing-title { font-size: clamp(36px, 10vw, 62px); }
+  .closing-tagline { font-size: 15px; }
+  .closing-stats {
+    flex-direction: column;
+    gap: 3px;
+    width: 100%;
+    max-width: 300px;
+  }
+  .closing-stat {
+    border-radius: 0 !important;
+    padding: 14px 20px;
+  }
+  .closing-stat:first-child { border-radius: 8px 8px 0 0 !important; }
+  .closing-stat:last-child  { border-radius: 0 0 8px 8px !important; }
+  .closing-footer { font-size: 9px; letter-spacing: 1.5px; text-align: center; padding: 0 16px; }
+}
+
+/* ── Small phone (≤430px) — extra tightening ── */
+@media (max-width: 430px) {
+  .slide      { padding: 44px 16px 56px; }
+  .s1-title   { font-size: clamp(44px, 12vw, 68px); }
+  .s1-stats   { grid-template-columns: 1fr 1fr; }
+  .stat-val   { font-size: 20px; }
+  .solana-card { flex-direction: column; }
+  .solana-metric { font-size: 24px; min-width: unset; }
+  pre { font-size: 9px; }
+  .comp-table { min-width: 420px; }
+}
+
+/* GLITCH EFFECT */
+@keyframes glitch {
+  0% { clip-path: inset(40% 0 61% 0); transform: translate(-2px, 0); }
+  20% { clip-path: inset(92% 0 1% 0); transform: translate(1px, 0); }
+  40% { clip-path: inset(43% 0 1% 0); transform: translate(-1px, 0); }
+  60% { clip-path: inset(25% 0 58% 0); transform: translate(2px, 0); }
+  80% { clip-path: inset(54% 0 7% 0); transform: translate(-2px, 0); }
+  100% { clip-path: inset(58% 0 43% 0); transform: translate(0); }
+}
+
+/* TERMINAL BLINK */
+.blink {
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* NUMBER COUNTER ANIMATION */
+.count-up { display: inline-block; }
+
+/* DIVIDER */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--teal), rgba(0,194,168,0.1) 60%, transparent);
+}
+
+/* SLIDE NUMBER */
+.slide-num {
+  position: absolute;
+  bottom: 20px;
+  right: 80px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: rgba(143,163,191,0.3);
+  z-index: 10;
+}
+
+/* DATA STREAM */
+.data-stream {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 200px;
+  overflow: hidden;
+  opacity: 0.04;
+  pointer-events: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--teal);
+  line-height: 1.4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Floating particles */
+.particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.particle {
+  position: absolute;
+  width: 2px; height: 2px;
+  border-radius: 50%;
+  background: var(--teal);
+  opacity: 0;
+  animation: particle-float linear infinite;
+}
+@keyframes particle-float {
+  0% { opacity: 0; transform: translateY(0) translateX(0); }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.2; }
+  100% { opacity: 0; transform: translateY(-100vh) translateX(var(--drift)); }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="grid-bg"></div>
+<div class="scanline"></div>
+
+<!-- NAV DOTS -->
+<div class="nav-dots" id="navDots"></div>
+
+<!-- SCROLL HINT -->
+<div class="scroll-hint" id="scrollHint">
+  <div class="scroll-arrow"></div>
+  SCROLL
+</div>
+
+<!-- =====================
+     SLIDE 1 — COVER
+     ===================== -->
+<section class="slide" id="s1">
+  <div class="s1-bg">
+    <div class="s1-orb s1-orb1"></div>
+    <div class="s1-orb s1-orb2"></div>
+    <div class="particles" id="particles1"></div>
+  </div>
+  <div class="corner-tl"></div>
+  <div class="corner-br"></div>
+
+  <div style="position:relative;z-index:2;width:100%;max-width:1100px;margin:0 auto;">
+    <div class="reveal">
+      <div class="s1-label">Colosseum Frontier Hackathon 2026 · Superteam Georgia</div>
+    </div>
+    <div class="reveal delay-1">
+      <h1 class="s1-title">
+        <span class="geo">Geo</span><span class="trust">Trust</span>
+      </h1>
+    </div>
+    <div class="reveal delay-2">
+      <p class="s1-tagline">
+        <strong>Portable freelancer reputation</strong> & USDC escrow protocol on Solana<br>
+        — designed for Georgian and emerging-market freelancers.
+      </p>
+    </div>
+    <div class="reveal delay-3">
+      <div class="s1-pills">
+        <span class="pill">Protocol</span>
+        <span class="pill">Freelance</span>
+        <span class="pill">Solana</span>
+        <span class="pill">Mainnet</span>
+      </div>
+    </div>
+    <div class="reveal delay-4">
+      <div class="s1-stats">
+        <div class="stat-box">
+          <span class="stat-val">1%</span>
+          <span class="stat-lbl">Protocol Fee</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-val">400ms</span>
+          <span class="stat-lbl">Block Time</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-val">5 wks</span>
+          <span class="stat-lbl">To MVP</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-val">2-Person</span>
+          <span class="stat-lbl">Team</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">01 / 15</div>
+  <div class="s1-footer">Superteam Georgia · Colosseum Frontier Hackathon 2026 · #BuildOnSolana</div>
+</section>
+
+<!-- =====================
+     SLIDE 2 — PROBLEM
+     ===================== -->
+<section class="slide" id="s2">
+  <div style="width:100%;max-width:1100px;margin:0 auto;box-sizing:border-box;display:flex;flex-direction:column;gap:36px;">
+    <div class="reveal"><div class="slide-tag">01 · Problem & Opportunity</div></div>
+    <div class="reveal delay-1">
+      <h2 class="slide-title">Georgian Freelancers<br>Are <span style="color:var(--red)">Trapped</span></h2>
+      <p class="slide-subtitle" style="margin-top:12px;">Talented developers, designers and creators — earning globally, but held back by platforms they don't control.</p>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-card red reveal-left delay-2">
+        <div class="problem-badge badge-red">0 Portability</div>
+        <div class="problem-title">Platform Lock-in</div>
+        <div class="problem-body">5 years of 5-star reviews on Upwork are <strong>worthless elsewhere</strong>. The platform owns your reputation — switching means starting from zero.</div>
+      </div>
+      <div class="problem-card yellow reveal delay-3">
+        <div class="problem-badge badge-yellow">Up to 20% cut</div>
+        <div class="problem-title">Slow Pay & High Fees</div>
+        <div class="problem-body">Upwork charges up to 15% with a 5-day hold. Fiverr holds 14 days and takes 20% flat. <strong>On a $1,000 Fiverr project, a Georgian freelancer loses $200</strong> before touching a cent.</div>
+      </div>
+      <div class="problem-card purple reveal-right delay-4">
+        <div class="problem-badge badge-purple">No trustless protection</div>
+        <div class="problem-title">No Neutral Escrow</div>
+        <div class="problem-body">Working with a first-time foreign client has <strong>no safety net</strong>. Disputes are costly, slow, and resolved by the same platform that profits from both sides.</div>
+      </div>
+    </div>
+    <div class="opportunity-bar reveal delay-5">
+      <strong>Opportunity:</strong> all three problems are solved simultaneously by a trustless escrow + on-chain credential protocol built on Solana.
+    </div>
+  </div>
+  <div class="slide-num">02 / 15</div>
+</section>
+
+<!-- =====================
+     SLIDE 3 — SOLUTION
+     ===================== -->
+<section class="slide" id="s3">
+  <div style="width:100%;max-width:1100px;margin:0 auto;box-sizing:border-box;display:flex;flex-direction:column;gap:36px;">
+    <div class="reveal"><div class="slide-tag">02 · Solution Overview</div></div>
+    <div class="reveal delay-1">
+      <h2 class="slide-title">What is <span style="color:var(--teal)">GeoTrust?</span></h2>
+      <p class="slide-subtitle" style="margin-top:12px;">A portable freelancer reputation and escrow protocol on Solana.</p>
+    </div>
+
+    <div class="reveal delay-2">
+      <div class="flow-diagram">
+        <div class="flow-step">
+          <div class="flow-step-label">01</div>
+          <div class="flow-step-title">Client Locks USDC</div>
+        </div>
+        <div class="flow-arrow">›</div>
+        <div class="flow-step">
+          <div class="flow-step-label">02</div>
+          <div class="flow-step-title">Work Begins</div>
+        </div>
+        <div class="flow-arrow">›</div>
+        <div class="flow-step">
+          <div class="flow-step-label">03</div>
+          <div class="flow-step-title">Work Approved</div>
+        </div>
+        <div class="flow-arrow">›</div>
+        <div class="flow-step">
+          <div class="flow-step-label">04</div>
+          <div class="flow-step-title">USDC Released</div>
+        </div>
+        <div class="flow-arrow">›</div>
+        <div class="flow-step" style="border-color:rgba(0,194,168,0.4);">
+          <div class="flow-step-label">05</div>
+          <div class="flow-step-title" style="color:var(--teal)">cNFT Minted</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="solution-layout">
+      <div class="solution-left">
+        <div class="solution-card reveal-left delay-3">
+          <div class="solution-card-icon">🔐</div>
+          <div class="solution-card-title">USDC Escrow Vault</div>
+          <div class="solution-card-body">Client deposits USDC into a <strong>PDA vault on-chain</strong> before work starts. Funds auto-release on approval. No centralized intermediary, no biased dispute resolution.</div>
+        </div>
+        <div class="solution-card reveal-left delay-4">
+          <div class="solution-card-icon">🏅</div>
+          <div class="solution-card-title">Credential NFTs</div>
+          <div class="solution-card-body">Every completed job mints a compressed NFT credential to the freelancer's wallet — job title, client pubkey, date, amount and rating. <strong>Permanent and verifiable by anyone.</strong></div>
+        </div>
+      </div>
+      <div class="solution-right">
+        <div class="solution-card reveal-right delay-3">
+          <div class="solution-card-icon">🌐</div>
+          <div class="solution-card-title">Portable Reputation</div>
+          <div class="solution-card-body">Reputation lives in your <strong>wallet, not a platform</strong>. Share a public profile URL. Any client on any platform can verify your on-chain work history instantly.</div>
+        </div>
+        <div class="solution-card reveal-right delay-4">
+          <div class="solution-card-icon">⚡</div>
+          <div class="solution-card-title">Instant USDC Settlement</div>
+          <div class="solution-card-body">No 7–14 day holds. No 15–20% platform fee. USDC settles in <strong>under a second</strong> directly to the freelancer's Phantom wallet, anywhere in the world.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">03 / 15</div>
+</section>
+
+<!-- =====================
+     SLIDE 4 — WHY SOLANA
+     ===================== -->
+<section class="slide" id="s4">
+  <div style="width:100%;max-width:1100px;margin:0 auto;box-sizing:border-box;display:flex;flex-direction:column;gap:36px;">
+    <div class="reveal"><div class="slide-tag">03 · Why Solana</div></div>
+    <div class="reveal delay-1">
+      <h2 class="slide-title">This Product Only <span style="color:var(--teal)">Exists on Solana</span></h2>
+      <p class="slide-subtitle" style="margin-top:12px;">Every core design decision requires Solana-specific capabilities. No other chain makes this economically viable.</p>
+    </div>
+    <div class="solana-grid">
+      <div class="solana-card reveal-left delay-2">
+        <div class="solana-metric">$0.00025</div>
+        <div>
+          <div class="solana-card-title">Near-Zero Fees</div>
+          <div class="solana-card-body">1,000 credential NFTs minted over a career costs under $0.25 on Solana. The same mints on Ethereum would cost thousands of dollars in gas fees. Only Solana makes micro-credential economics viable.</div>
+        </div>
+      </div>
+      <div class="solana-card reveal-right delay-2">
+        <div class="solana-metric">~400ms</div>
+        <div>
+          <div class="solana-card-title">Instant-Feel Settlement</div>
+          <div class="solana-card-body">Solana's ~400ms block time means payment release feels like a bank transfer, not a blockchain. UX parity with Web2 is non-negotiable for non-crypto freelancers.</div>
+        </div>
+      </div>
+      <div class="solana-card reveal-left delay-3">
+        <div class="solana-metric">cNFTs</div>
+        <div>
+          <div class="solana-card-title">Compressed Credentials</div>
+          <div class="solana-card-body">Metaplex state compression lets GeoTrust mint millions of credentials at fractions of a cent each — permanent on-chain proofs owned by the freelancer. No EVM equivalent.</div>
+        </div>
+      </div>
+      <div class="solana-card reveal-right delay-3">
+        <div class="solana-metric" style="font-size:20px;padding-top:6px;">Phantom<br>+ MoonPay</div>
+        <div>
+          <div class="solana-card-title">Frontier Sponsor Stack</div>
+          <div class="solana-card-body">Both are official Frontier sponsors. GeoTrust uses both — clients with zero crypto experience can fund escrow by card in under 2 minutes.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">04 / 15</div>
+</section>
+
+<!-- =====================
+     SLIDE 5 — MARKET
+     ===================== -->
+<section class="slide" id="s5">
+  <div style="width:100%;max-width:1100px;margin:0 auto;box-sizing:border-box;display:flex;flex-direction:column;gap:36px;">
+    <div class="reveal"><div class="slide-tag">04 · Target User & Market</div></div>
+    <div class="reveal delay-1">
+      <h2 class="slide-title">Who Uses GeoTrust &<br>How Big Is the <span style="color:var(--teal)">Opportunity?</span></h2>
+    </div>
+    <div class="market-layout">
+      <div class="market-segments">
+        <div class="market-seg reveal-left delay-2">
+          <div class="market-seg-title">Georgian Developers</div>
+          <div class="market-seg-body">Tech freelancers billing EU/US clients — high earning potential, most frustrated by platform fees up to 15% and 10-day payment holds.</div>
+        </div>
+        <div class="market-seg reveal-left delay-3">
+          <div class="market-seg-title">Designers & Creatives</div>
+          <div class="market-seg-body">Graphic designers, video editors, copywriters — heavy Fiverr users losing 20% on every transaction to the platform.</div>
+        </div>
+        <div class="market-seg reveal-left delay-4">
+          <div class="market-seg-title">South Caucasus Expansion</div>
+          <div class="market-seg-body">Armenia and Azerbaijan have identical freelancer pain points. Natural second-market after Georgian product-market fit.</div>
+        </div>
+        <div class="market-seg reveal-left delay-5">
+          <div class="market-seg-title">Crypto-Native Global Clients</div>
+          <div class="market-seg-body">Web3 companies hiring remote talent already hold USDC — GeoTrust fits their workflow with zero onboarding friction.</div>
+        </div>
+      </div>
+      <div class="market-stats">
+        <div class="mstat reveal-right delay-2">
+          <div class="mstat-val">Growing</div>
+          <div class="mstat-label">Tech freelance community — developers, designers & creatives billing EU/US clients</div>
+        </div>
+        <div class="mstat reveal-right delay-3">
+          <div class="mstat-val">$580B</div>
+          <div class="mstat-label">Global Gig Economy (2025)</div>
+        </div>
+        <div class="mstat reveal-right delay-4">
+          <div class="mstat-val">$15M</div>
+          <div class="mstat-label">Revenue @ 1% fee on TAM</div>
+        </div>
+        <div class="mstat reveal-right delay-5">
+          <div class="mstat-val">3</div>
+          <div class="mstat-label">Countries · Initial Market Wedge</div>
+        </div>
+        <div class="business-model reveal delay-6">
+          <strong>Business model:</strong> 1% fee on every escrow transaction settled. No subscription. No lock-in. Revenue scales with freelancer activity.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">05 / 15</div>
+</section>
+
+<!-- =====================
+     SLIDE 6 — FEATURES
+     ===================== -->
+<section class="slide" id="s6">
+  <div style="width:100%;max-width:1100px;margin:0 auto;box-sizing:border-box;display:flex;flex-direction:column;gap:36px;">
+    <div class="reveal"><div class="slide-tag">05 · Core Features — MVP Scope</div></div>
+    <div class="reveal delay-1">
+      <h2 class="slide-title">5 Features Buildable in<br>the <span style="color:var(--teal)">Hackathon Window</span></h2>
+      <p class="slide-subtitle" style="margin-top:12px;">Each feature is independently testable, ships to devnet, and contributes to the live judge demo.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal delay-2">
+        <div class="feature-num">// 01</div>
+        <div class="feature-title">USDC Escrow Contract</div>
+        <div class="feature-body">Anchor program: client deposits USDC into a PDA vault. Funds release on work approval or auto-refund on dispute. Fully on-chain.</div>
+        <div class="feature-tag">Anchor · Solana</div>
+      </div>
+      <div class="feature-card reveal delay-3">
+        <div class="feature-num">// 02</div>
+        <div class="feature-title">Job Posting & Acceptance</div>
+        <div class="feature-body">React UI: post job with title, scope, deadline and USDC amount. Freelancer accepts via Phantom wallet signature.</div>
+        <div class="feature-tag">React · Wallet Adapter</div>
+      </div>
+      <div class="feature-card reveal delay-4">
+        <div class="feature-num">// 03</div>
+        <div class="feature-title">Credential NFT Mint</div>
+        <div class="feature-body">On job completion, program mints a compressed NFT (cNFT) to freelancer's wallet: job title, client pubkey, date, amount and 1–5 star rating.</div>
+        <div class="feature-tag">Metaplex · cNFT</div>
+      </div>
+      <div class="feature-card reveal delay-5">
+        <div class="feature-num">// 04</div>
+        <div class="feature-title">Public Reputation Profile</div>
+        <div class="feature-body">Each wallet has a shareable public profile page showing all verified credential NFTs. Judges and clients verify on-chain history in real time.</div>
+        <div class="feature-tag">Next.js · Helius RPC</div>
+      </div>
+      <div class="feature-card reveal delay-6">
+        <div class="feature-num">// 05</div>
+        <div class="feature-title">Basic Dispute Resolution</div>
+        <div class="feature-body">If client withholds approval, freelancer triggers a 48-hour window. Both parties submit evidence. 3-arbiter on-chain vote determines fund release.</div>
+        <div class="feature-tag">Solana Program</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">06 / 15</div>
+</section>
+
+<!-- =====================
+     SLIDE 7 — ORIGINALITY
+     ===================== -->
+<section class="slide" id="s7">
+  <div style="width:100%;max-width:1100px;margin:0 auto;box-sizing:border-box;display:flex;flex-direction:column;gap:36px;">
+    <div class="reveal"><div class="slide-tag">06 · Originality & Ambition</div></div>
+    <div class="reveal delay-1">
+      <h2 class="slide-title">Why This Idea Is <span style="color:var(--teal)">Original</span></h2>
+    </div>
+    <div class="origin-layout">
+      <div class="origin-card reveal delay-2">
+        <div class="origin-icon">🔗</div>
+        <div class="origin-title">No Existing Web3 Product Owns This Combination</div>
+        <div class="origin-body">Braintrust (reputation-only, no escrow). Gitcoin (grants, not freelance). Request Network (invoicing, no credentials). LaborX (crypto escrow, but no portable credential NFTs and no Georgia focus). GeoTrust is the first to combine trustless escrow + portable on-chain reputation in one protocol, targeted at an underserved geography.</div>
+      </div>
+      <div class="origin-card reveal delay-3">
+        <div class="origin-icon">📍</div>
+        <div class="origin-title">Geography-First: Built for Where the Problem Is Sharpest</div>
+        <div class="origin-body">Rather than building another global generic tool, GeoTrust targets Georgia and the South Caucasus — an underserved region with a growing tech freelance community and zero crypto-native tooling. This is a beachhead, not a feature.</div>
+      </div>
+      <div class="origin-card reveal delay-4">
+        <div class="origin-icon">🏗️</div>
+        <div class="origin-title">Reputation as Infrastructure, Not a Product Feature</div>
+        <div class="origin-body">Credential NFTs are composable primitives — any marketplace, DAO, or hiring platform can query them. GeoTrust's reputation layer becomes a public good for the Solana ecosystem, not a walled garden.</div>
+      </div>
+    </div>
+    <div class="differentiator reveal delay-5">
+      <div class="diff-label">Ambition</div>
+      <div class="diff-text">GeoTrust's credential layer becomes the default reputation primitive for Solana's freelance ecosystem.</div>
+    </div>
+  </div>
+  <div class="slide-num">07 / 15</div>
+</section>
+
+<!-- =====================
+     SLIDE 8 — BUILD PLAN
+     ===================== -->
+<section class="slide" id="s8">
+  <div style="width:100%;max-width:1100px;margin:0 auto;box-sizing:border-box;display:flex;flex-direction:column;gap:36px;">
+    <div class="reveal"><div class="slide-tag">07 · 5-Week Build Plan</div></div>
+    <div class="reveal delay-1">
+      <h2 class="slide-title">How GeoTrust <span style="color:var(--teal)">Ships in 5 Weeks</span></h2>
+      <p class="slide-subtitle" style="margin-top:12px;">Saba owns Rust/Anchor smart contracts. Dachi owns React UI and product. No hardware, no partnerships, no regulatory approval required.</p>
+    </div>
+    <div class="timeline">
+      <div class="timeline-week reveal delay-2">
+        <div class="wk-label">WK 1</div>
+        <div class="wk-title">Foundation</div>
+        <ul class="wk-items">
+          <li>Anchor workspace & devnet setup</li>
+          <li>SplitEscrow PDA (deposit/release/refund)</li>
+          <li>Unit tests for escrow logic</li>
+          <li>Wallet adapter + React scaffold</li>
+        </ul>
+      </div>
+      <div class="timeline-week reveal delay-3">
+        <div class="wk-label">WK 2</div>
+        <div class="wk-title">Core Features</div>
+        <ul class="wk-items">
+          <li>Job posting & acceptance UI</li>
+          <li>Freelancer accept via wallet sig</li>
+          <li>Integrate USDC SPL token</li>
+          <li>E2E test: post → fund → release</li>
+        </ul>
+      </div>
+      <div class="timeline-week reveal delay-4">
+        <div class="wk-label">WK 3</div>
+        <div class="wk-title">Credentials</div>
+        <ul class="wk-items">
+          <li>Metaplex state compression setup</li>
+          <li>Auto-mint cNFT on job completion</li>
+          <li>Store metadata: title/pubkey/date/rating</li>
+          <li>Public profile via Helius RPC</li>
+        </ul>
+      </div>
+      <div class="timeline-week reveal delay-5">
+        <div class="wk-label">WK 4</div>
+        <div class="wk-title">Polish + Dispute</div>
+        <ul class="wk-items">
+          <li>Basic dispute resolution flow</li>
+          <li>MoonPay onramp integration</li>
+          <li>UI polish: mobile-responsive</li>
+          <li>Deploy to devnet, QA</li>
+        </ul>
+      </div>
+      <div class="timeline-week reveal delay-6">
+        <div class="wk-label">WK 5</div>
+        <div class="wk-title">Demo Ready</div>
+        <ul class="wk-items">
+          <li>Loom walkthrough video</li>
+          <li>Shareable demo link for judges</li>
+          <li>Submission document</li>
+          <li>Buffer for bug fixes & QA</li>
+        </ul>
+      </div>
+    </div>
+    <div class="risk-bar reveal delay-7">
+      <strong>Risk mitigation:</strong> dispute resolution (WK4) descoped to a simple 3-wallet vote if time is short — core escrow + credentials demo stands alone.
+    </div>
+  </div>
+  <div class="slide-num">08 / 15</div>
+</section>
+
+<!-- =====================
+     SLIDE 9 — WIREFRAMES
+     ===================== -->
+<section class="slide" id="s9">
+  <div style="width:100%;max-width:1100px;margin:0 auto;box-sizing:border-box;display:flex;flex-direction:column;gap:36px;">
+    <div class="reveal"><div class="slide-tag">08 · Wireframes · UI Concept Sketches</div></div>
+    <div class="reveal delay-1">
+      <h2 class="slide-title">3 Key <span style="color:var(--teal)">Screens</span></h2>
+      <p class="slide-subtitle" style="margin-top:12px;">Lo-fi wireframes showing the core user flows. Built with Phantom wallet — no email, no sign-up.</p>
+    </div>
+    <div class="wireframes-grid">
+      <!-- Screen 1: Post a Job -->
+      <div class="wireframe reveal-left delay-2">
+        <div class="wf-header">
+          <div class="wf-dots"><div class="wf-dot"></div><div class="wf-dot"></div><div class="wf-dot"></div></div>
+          <div class="wf-title">📋 Post a Job — Client</div>
+        </div>
+        <div class="wf-body">
+          <div class="wf-field">
+            <div class="wf-field-label">JOB TITLE</div>
+            <div class="wf-field-val">UI/UX Designer needed</div>
+          </div>
+          <div class="wf-field">
+            <div class="wf-field-label">SCOPE</div>
+            <div class="wf-field-val">3-page web redesign</div>
+          </div>
+          <div class="wf-field">
+            <div class="wf-field-label">BUDGET (USDC)</div>
+            <div class="wf-field-val">500</div>
+          </div>
+          <div class="wf-field">
+            <div class="wf-field-label">DEADLINE</div>
+            <div class="wf-field-val">7 days</div>
+          </div>
+          <div class="wf-btn">🔒 Lock 500 USDC in Escrow</div>
+        </div>
+      </div>
+      <!-- Screen 2: Work Approved -->
+      <div class="wireframe reveal delay-3">
+        <div class="wf-header">
+          <div class="wf-dots"><div class="wf-dot"></div><div class="wf-dot"></div><div class="wf-dot"></div></div>
+          <div class="wf-title">✅ Work Approved</div>
+        </div>
+        <div class="wf-body">
+          <div class="wf-field">
+            <div class="wf-field-label">JOB</div>
+            <div class="wf-field-val">UI/UX Redesign</div>
+          </div>
+          <div class="wf-field">
+            <div class="wf-field-label">CLIENT</div>
+            <div class="wf-field-val" style="font-family:'JetBrains Mono',monospace;font-size:11px;">8xAb...3fGh</div>
+          </div>
+          <div class="wf-field">
+            <div class="wf-field-label">AMOUNT</div>
+            <div class="wf-field-val">500 USDC</div>
+          </div>
+          <div class="wf-field" style="border-color:rgba(0,194,168,0.4);">
+            <div class="wf-field-label" style="color:var(--teal);">STATUS</div>
+            <div class="wf-field-val" style="color:var(--teal);">✅ Approved</div>
+          </div>
+          <div class="wf-badge">🏅 Credential NFT minted to wallet</div>
+          <div class="wf-badge">⚡ 500 USDC Released to Wallet</div>
+        </div>
+      </div>
+      <!-- Screen 3: Reputation Profile -->
+      <div class="wireframe reveal-right delay-4">
+        <div class="wf-header">
+          <div class="wf-dots"><div class="wf-dot"></div><div class="wf-dot"></div><div class="wf-dot"></div></div>
+          <div class="wf-title">🏆 Reputation Profile</div>
+        </div>
+        <div class="wf-body">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--grey);margin-bottom:4px;">9kLm...4pQr</div>
+          <div class="wf-stat-row">
+            <div class="wf-stat"><div class="wf-stat-v">12</div><div class="wf-stat-l">JOBS</div></div>
+            <div class="wf-stat"><div class="wf-stat-v">4.9</div><div class="wf-stat-l">RATING</div></div>
+            <div class="wf-stat"><div class="wf-stat-v">6.2K</div><div class="wf-stat-l">USDC</div></div>
+          </div>
+          <div style="font-size:11px;color:var(--grey);font-weight:700;margin-top:4px;">Verified Credentials</div>
+          <div class="wf-cred"><div class="wf-cred-title">UI/UX Redesign</div><div class="wf-cred-sub">Acme Corp · 500 USDC · ★★★★★</div></div>
+          <div class="wf-cred"><div class="wf-cred-title">Logo Design</div><div class="wf-cred-sub">Beta Co · 150 USDC · ★★★★☆</div></div>
+          <div class="wf-cred"><div class="wf-cred-title">React Dashboard</div><div class="wf-cred-sub">Gamma · 800 USDC · ★★★★★</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">09 / 15</div>
+</section>
+
+<!-- =====================
+     SLIDE 10 — TEAM
+     ===================== -->
+<section class="slide" id="s10">
+  <div style="width:100%;max-width:1100px;margin:0 auto;box-sizing:border-box;display:flex;flex-direction:column;gap:36px;">
+    <div class="reveal"><div class="slide-tag">09 · Team</div></div>
+    <div class="reveal delay-1"><h2 class="slide-title">The <span style="color:var(--teal)">Team</span></h2></div>
+    <div class="team-layout">
+      <div class="team-card reveal-left delay-2">
+        <div class="team-avatar">SG</div>
+        <div class="team-name">Saba G.</div>
+        <div class="team-role">Co-Founder · Engineering</div>
+        <div class="team-skills">
+          <span class="team-skill">Rust/Anchor & React/Next.js</span>
+          <span class="team-skill">Solana Programs</span>
+          <span class="team-skill">Solana Ecosystem Builder</span>
+        </div>
+      </div>
+      <div class="team-card reveal delay-2">
+        <div class="team-avatar">DG</div>
+        <div class="team-name">Dachi G.</div>
+        <div class="team-role">Co-Founder · AI & Product</div>
+        <div class="team-skills">
+          <span class="team-skill">AI & Product Strategy</span>
+          <span class="team-skill">Georgian Market Knowledge</span>
+        </div>
+      </div>
+      <div class="proof-panel reveal-right delay-3">
+        <div class="proof-title">Proof of Readiness</div>
+        <div class="proof-item">
+          <div class="proof-check">✓</div>
+          <div>
+            <div class="proof-label">Technical stack known</div>
+            <div class="proof-body">Saba: React, Next.js, Solana tooling, Anchor escrow program already drafted (Slide 11). Dachi: AI integration, product strategy, GTM.</div>
+          </div>
+        </div>
+        <div class="proof-item">
+          <div class="proof-check">✓</div>
+          <div>
+            <div class="proof-label">Community access</div>
+            <div class="proof-body">Active in Tbilisi tech community. Direct access to Georgian freelancers for user interviews and beta testing from day one.</div>
+          </div>
+        </div>
+        <div class="proof-item">
+          <div class="proof-check">✓</div>
+          <div>
+            <div class="proof-label">2-person founding team</div>
+            <div class="proof-body">Saba (engineering) + Dachi (AI & product). Both based in Tbilisi. Full stack: Rust/Anchor contracts, React frontend, AI integration, and Georgian market GTM.</div>
+          </div>
+        </div>
+        <div class="proof-item">
+          <div class="proof-check">✓</div>
+          <div>
+            <div class="proof-label">Founder-market fit</div>
+            <div class="proof-body">Georgian builders. Personally experienced the pain of platform fees and payment holds when selling services to foreign clients.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">10 / 15</div>
+</section>
+
+<!-- =====================
+     SLIDE 11 — CODE
+     ===================== -->
+<section class="slide" id="s11">
+  <div style="width:100%;max-width:1100px;margin:0 auto;box-sizing:border-box;display:flex;flex-direction:column;gap:36px;">
+    <div class="reveal"><div class="slide-tag">09.5 · Proof of Build · Anchor Escrow Program</div></div>
+    <div class="reveal delay-1"><h2 class="slide-title">The Code Is Already <span style="color:var(--teal)">Written</span></h2></div>
+    <div class="code-layout">
+      <div class="code-panel reveal-left delay-2">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+        </div>
+        <pre><span class="kw">use</span> anchor_lang::prelude::*;
+<span class="kw">use</span> anchor_spl::token::{<span class="kw">self</span>, Token, TokenAccount, Transfer};
+
+<span class="cm">// Lock USDC into PDA vault</span>
+<span class="kw">pub fn</span> <span class="fn">create_job</span>(ctx: Context&lt;CreateJob&gt;,
+    amount: u64, deadline: i64) -&gt; Result&lt;()&gt; {
+  <span class="kw">let</span> job = &amp;<span class="kw">mut</span> ctx.accounts.job;
+  job.amount = amount; job.deadline = deadline;
+  job.status = <span class="type">JobStatus</span>::<span class="teal-c">Open</span>;
+  token::<span class="fn">transfer</span>(CpiContext::new(
+    ctx.accounts.token_program.to_account_info(),
+    <span class="type">Transfer</span> { from: ctx.accounts.client_ata,
+      to: ctx.accounts.vault,
+      authority: ctx.accounts.client }),
+  amount)?;  Ok(()) }
+
+<span class="cm">// Release USDC to freelancer</span>
+<span class="kw">pub fn</span> <span class="fn">approve_work</span>(ctx: Context&lt;ApproveWork&gt;,
+    rating: u8) -&gt; Result&lt;()&gt; {
+  <span class="kw">let</span> job = &amp;<span class="kw">mut</span> ctx.accounts.job;
+  job.status = <span class="type">JobStatus</span>::<span class="teal-c">Completed</span>;
+  job.rating = rating;
+  <span class="kw">let</span> amount = job.amount;
+  token::<span class="fn">transfer</span>(CpiContext::new_with_signer(
+    ctx.accounts.token_program.to_account_info(),
+    <span class="type">Transfer</span> { from: ctx.accounts.vault,
+      to: ctx.accounts.freelancer_ata,
+      authority: ctx.accounts.vault_authority },
+    &amp;[&amp;[<span class="str">b"vault"</span>, job.key().as_ref(),
+       &amp;[ctx.bumps.vault_authority]]]),
+  amount)?;  Ok(()) }</pre>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="state-machine reveal-right delay-2">
+          <div class="sm-title">// Job State Machine</div>
+          <div class="sm-states">
+            <div class="sm-state"><span class="sm-state-name">Open</span><span class="sm-arrow">→</span><span class="sm-state-name">InProgress</span></div>
+            <div class="sm-state"><span class="sm-state-name">InProgress</span><span class="sm-arrow">→</span><span class="sm-state-name">Completed</span></div>
+            <div class="sm-state"><span class="sm-state-name">InProgress</span><span class="sm-arrow">→</span><span class="sm-state-name">Disputed</span></div>
+            <div class="sm-state"><span class="sm-state-name">Open</span><span class="sm-arrow">→</span><span class="sm-state-name">Refunded</span></div>
+          </div>
+        </div>
+        <div class="state-machine reveal-right delay-3">
+          <div class="sm-title">// 5 Instructions</div>
+          <div class="instructions">
+            <div class="instr"><span class="instr-name">create_job</span><span class="instr-desc">lock USDC</span></div>
+            <div class="instr"><span class="instr-name">accept_job</span><span class="instr-desc">confirm work</span></div>
+            <div class="instr"><span class="instr-name">approve_work</span><span class="instr-desc">release USDC</span></div>
+            <div class="instr"><span class="instr-name">raise_dispute</span><span class="instr-desc">open window</span></div>
+            <div class="instr"><span class="instr-name">refund_expired</span><span class="instr-desc">auto-refund</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="opportunity-bar reveal delay-5" style="font-family:'JetBrains Mono',monospace;font-size:12px;">
+      <strong>Status:</strong> Anchor program drafted locally · 5 instructions, PDA vault, SPL token transfers · Ready to deploy to devnet
+    </div>
+  </div>
+  <div class="slide-num">11 / 15</div>
+</section>
+
+<!-- =====================
+     SLIDE 12 — COMPETITORS
+     ===================== -->
+<section class="slide" id="s12">
+  <div style="width:100%;max-width:1100px;margin:0 auto;box-sizing:border-box;display:flex;flex-direction:column;gap:36px;">
+    <div class="reveal"><div class="slide-tag">10 · Competitor Analysis</div></div>
+    <div class="reveal delay-1">
+      <h2 class="slide-title">Why Existing Platforms <span style="color:var(--red)">Fall Short</span></h2>
+      <p class="slide-subtitle" style="margin-top:12px;">These platforms all work in Georgia — but none solve all three core problems simultaneously.</p>
+    </div>
+    <div class="reveal delay-2">
+      <div class="comp-table-wrap">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Platform</th>
+            <th>Portable Rep.</th>
+            <th>Trustless Escrow</th>
+            <th>Low Fees</th>
+            <th>Fast Payment</th>
+            <th>Works in GE</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Upwork</td>
+            <td><span class="check-no">✗</span></td>
+            <td><span class="check-no">✗</span></td>
+            <td><span class="check-no">✗</span></td>
+            <td><span class="check-no">✗</span></td>
+            <td><span class="check-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Fiverr</td>
+            <td><span class="check-no">✗</span></td>
+            <td><span class="check-no">✗</span></td>
+            <td><span class="check-no">✗</span></td>
+            <td><span class="check-no">✗</span></td>
+            <td><span class="check-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>PayPal</td>
+            <td><span class="check-no">✗</span></td>
+            <td><span class="check-no">✗</span></td>
+            <td><span class="check-partial">~</span></td>
+            <td><span class="check-partial">~</span></td>
+            <td><span class="check-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Braintrust</td>
+            <td><span class="check-partial">~</span></td>
+            <td><span class="check-no">✗</span></td>
+            <td><span class="check-partial">~</span></td>
+            <td><span class="check-partial">~</span></td>
+            <td><span class="check-partial">~</span></td>
+          </tr>
+          <tr>
+            <td>LaborX</td>
+            <td><span class="check-partial">~</span></td>
+            <td><span class="check-yes">✓</span></td>
+            <td><span class="check-partial">~</span></td>
+            <td><span class="check-yes">✓</span></td>
+            <td><span class="check-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>GeoTrust ✦</td>
+            <td><span class="check-yes">✓</span></td>
+            <td><span class="check-yes">✓</span></td>
+            <td><span class="check-yes">✓</span></td>
+            <td><span class="check-yes">✓</span></td>
+            <td><span class="check-yes">✓</span></td>
+          </tr>
+        </tbody>
+      </table>
+      </div><!-- /.comp-table-wrap -->
+    </div>
+    <div class="comp-legend reveal delay-3">
+      <span><span class="check-yes">✓</span> Fully supported</span>
+      <span><span class="check-partial">~</span> Partial / limited</span>
+      <span><span class="check-no">✗</span> Not available or significant limitation</span>
+    </div>
+  </div>
+  <div class="slide-num">12 / 15</div>
+</section>
+
+<!-- =====================
+     SLIDE 13 — TRACTION
+     ===================== -->
+<section class="slide" id="s13">
+  <div style="width:100%;max-width:1100px;margin:0 auto;box-sizing:border-box;display:flex;flex-direction:column;gap:36px;">
+    <div class="reveal"><div class="slide-tag">11 · Traction & Validation</div></div>
+    <div class="reveal delay-1"><h2 class="slide-title">Early <span style="color:var(--teal)">Signals</span></h2></div>
+    <div class="traction-grid">
+      <div class="traction-card reveal-left delay-2">
+        <span class="traction-badge">10 / 12 Validated</span>
+        <div class="traction-label">User Research</div>
+        <div class="traction-title">Community Interviews</div>
+        <div class="traction-body">Interviewed 12 Georgian freelancers via LinkedIn and Tbilisi tech groups. 10 out of 12 cited platform fees and multi-week payment holds as their primary pain point.</div>
+      </div>
+      <div class="traction-card reveal-right delay-3">
+        <span class="traction-badge">Prior Art</span>
+        <div class="traction-label">Prior Art</div>
+        <div class="traction-title">Comparable Project at Colosseum</div>
+        <div class="traction-body">Credible — stablecoin rails for Indian freelancers — placed 2nd in the Stablecoins track of the Cypherpunk Hackathon (verifiable on Colosseum explorer). GeoTrust is the same thesis for Georgia. LaborX exists but lacks portable credential NFTs — our key differentiator.</div>
+      </div>
+      <div class="traction-card reveal-left delay-4">
+        <span class="traction-badge">3-Week Demo</span>
+        <div class="traction-label">Dev Confidence</div>
+        <div class="traction-title">Technical Feasibility Confirmed</div>
+        <div class="traction-body">Anchor escrow programs are well-documented with dozens of production references. Metaplex cNFTs are battle-tested on mainnet. Full stack can reach devnet demo in 3 weeks.</div>
+      </div>
+      <div class="traction-card reveal-right delay-5">
+        <span class="traction-badge">50+ Companies</span>
+        <div class="traction-label">Local Network</div>
+        <div class="traction-title">Tbilisi Tech Community</div>
+        <div class="traction-body">Tbilisi is home to 50+ tech companies and an active remote-work community. Space 1, 3D Smart Space, and Fabrika host regular developer meetups — a ready beta pool.</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">13 / 15</div>
+</section>
+
+<!-- =====================
+     SLIDE 14 — ROADMAP
+     ===================== -->
+<section class="slide" id="s14">
+  <div style="width:100%;max-width:1100px;margin:0 auto;box-sizing:border-box;display:flex;flex-direction:column;gap:36px;">
+    <div class="reveal"><div class="slide-tag">12 · Roadmap</div></div>
+    <div class="reveal delay-1"><h2 class="slide-title">From Hackathon Demo to <span style="color:var(--teal)">Startup</span></h2></div>
+    <div class="roadmap-phases">
+      <div class="phase-card reveal-left delay-2">
+        <div class="phase-num">Phase 1</div>
+        <div class="phase-period">Weeks 1–5 · Hackathon</div>
+        <div class="phase-title">Build</div>
+        <div class="phase-items">
+          <div class="phase-item">Anchor escrow program on devnet</div>
+          <div class="phase-item">React + Phantom wallet adapter UI</div>
+          <div class="phase-item">Credential NFT minting via Metaplex</div>
+          <div class="phase-item">Public reputation profile page</div>
+          <div class="phase-item">Live demo ready for judges</div>
+        </div>
+      </div>
+      <div class="phase-card reveal delay-3">
+        <div class="phase-num">Phase 2</div>
+        <div class="phase-period">Months 2–3 · Launch</div>
+        <div class="phase-title">Launch</div>
+        <div class="phase-items">
+          <div class="phase-item">Mainnet launch with Georgian beta users</div>
+          <div class="phase-item">MoonPay fiat onramp integration</div>
+          <div class="phase-item">Full dispute resolution module</div>
+          <div class="phase-item">Mobile-optimized frontend</div>
+          <div class="phase-item">Tbilisi community onboarding events</div>
+        </div>
+      </div>
+      <div class="phase-card reveal-right delay-4">
+        <div class="phase-num">Phase 3</div>
+        <div class="phase-period">Months 4–12 · Scale</div>
+        <div class="phase-title">Scale</div>
+        <div class="phase-items">
+          <div class="phase-item">Expand to Armenia & Azerbaijan</div>
+          <div class="phase-item">Integrate reputation layer for Web2 platforms</div>
+          <div class="phase-item">DAO governance for dispute arbitration</div>
+          <div class="phase-item">Token incentive program for early adopters</div>
+          <div class="phase-item">Apply for Colosseum accelerator ($250K)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">14 / 15</div>
+</section>
+
+<!-- =====================
+     SLIDE 15 — CLOSING
+     ===================== -->
+<section class="slide" id="s15">
+  <div class="s15-bg">
+    <div class="s15-orb"></div>
+    <div class="particles" id="particles15"></div>
+  </div>
+  <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:36px;text-align:center;">
+    <div class="reveal">
+      <div class="closing-title">
+        <div>Own your reputation.</div>
+        <div class="line2">Get paid instantly.</div>
+        <div>Work freely.</div>
+      </div>
+    </div>
+    <div class="reveal delay-2">
+      <p class="closing-tagline">A portable freelancer reputation and USDC escrow protocol on Solana — designed for Georgian and emerging-market freelancers.</p>
+    </div>
+    <div class="closing-stats reveal delay-3">
+      <div class="closing-stat">
+        <div class="cs-val">1%</div>
+        <div class="cs-lbl">Escrow Fee</div>
+      </div>
+      <div class="closing-stat">
+        <div class="cs-val">5 wks</div>
+        <div class="cs-lbl">Hackathon Ready</div>
+      </div>
+      <div class="closing-stat">
+        <div class="cs-val">Solana</div>
+        <div class="cs-lbl">cNFT + USDC + Anchor</div>
+      </div>
+    </div>
+    <div class="closing-footer reveal delay-4">
+      SUPERTEAM GEORGIA · COLOSSEUM FRONTIER HACKATHON 2026 · #BUILDONSOLANA
+    </div>
+  </div>
+  <div class="slide-num">15 / 15</div>
+</section>
+
+<script>
+// ——— CURSOR ———
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function animateCursor() {
+  cursor.style.left = mx - 4 + 'px';
+  cursor.style.top = my - 4 + 'px';
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.left = rx - 16 + 'px';
+  ring.style.top = ry - 16 + 'px';
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+document.querySelectorAll('a, button, .problem-card, .solana-card, .feature-card, .team-card, .wireframe, .phase-card').forEach(el => {
+  el.addEventListener('mouseenter', () => { ring.style.width = '52px'; ring.style.height = '52px'; ring.style.borderColor = 'rgba(0,194,168,0.8)'; });
+  el.addEventListener('mouseleave', () => { ring.style.width = '32px'; ring.style.height = '32px'; ring.style.borderColor = 'rgba(0,194,168,0.4)'; });
+});
+
+// ——— PARTICLES ———
+function createParticles(containerId, count) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `
+      left: ${Math.random() * 100}%;
+      bottom: -10px;
+      --drift: ${(Math.random() - 0.5) * 100}px;
+      animation-duration: ${4 + Math.random() * 8}s;
+      animation-delay: ${Math.random() * 8}s;
+      width: ${1 + Math.random() * 2}px;
+      height: ${1 + Math.random() * 2}px;
+    `;
+    container.appendChild(p);
+  }
+}
+createParticles('particles1', 25);
+createParticles('particles15', 30);
+
+// ——— NAV DOTS ———
+const slides = document.querySelectorAll('.slide');
+const navDots = document.getElementById('navDots');
+slides.forEach((_, i) => {
+  const dot = document.createElement('button');
+  dot.className = 'nav-dot';
+  dot.setAttribute('aria-label', `Slide ${i+1}`);
+  dot.addEventListener('click', () => slides[i].scrollIntoView({ behavior: 'smooth' }));
+  navDots.appendChild(dot);
+});
+
+// ——— SCROLL OBSERVER ———
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      // Update nav dots
+      const idx = Array.from(slides).indexOf(entry.target);
+      document.querySelectorAll('.nav-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+      // Reveal elements
+      entry.target.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+        el.classList.add('visible');
+      });
+      // Hide scroll hint after first slide
+      if (idx > 0) document.getElementById('scrollHint').style.opacity = '0';
+      else document.getElementById('scrollHint').style.opacity = '1';
+    }
+  });
+}, { threshold: 0.3 });
+
+slides.forEach(s => observer.observe(s));
+
+// ——— KEYBOARD NAV ———
+let currentSlide = 0;
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    currentSlide = Math.min(currentSlide + 1, slides.length - 1);
+    slides[currentSlide].scrollIntoView({ behavior: 'smooth' });
+  }
+  if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    e.preventDefault();
+    currentSlide = Math.max(currentSlide - 1, 0);
+    slides[currentSlide].scrollIntoView({ behavior: 'smooth' });
+  }
+});
+
+// Track current slide from scroll
+const slideObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      currentSlide = Array.from(slides).indexOf(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+slides.forEach(s => slideObserver.observe(s));
+
+// ——— GLITCH EFFECT on title ———
+const geoTrust = document.querySelector('.s1-title .trust');
+if (geoTrust) {
+  setInterval(() => {
+    if (Math.random() > 0.95) {
+      geoTrust.style.textShadow = `${Math.random()*4-2}px 0 var(--red), ${Math.random()*4-2}px 0 rgba(0,194,168,0.8)`;
+      setTimeout(() => geoTrust.style.textShadow = '', 80);
+    }
+  }, 200);
+}
+
+// ——— DATA STREAM TEXT ———
+// Subtle effect: random hex data scrolling on slides
+const hexChars = '0123456789ABCDEF';
+document.querySelectorAll('.data-stream').forEach(el => {
+  let text = '';
+  for (let i = 0; i < 300; i++) {
+    text += Array.from({length: 8}, () => hexChars[Math.floor(Math.random() * 16)]).join('') + ' ';
+    if (i % 6 === 0) text += '\n';
+  }
+  el.textContent = text;
+});
+</script>
+</body>
+</html>
